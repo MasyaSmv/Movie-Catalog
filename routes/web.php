@@ -13,6 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// надстройки аудентификации
+Auth::routes([
+    'reset' => false,
+    'confirm' => false,
+    'verify' => false,
+]);
+
+Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+
+Route::group(['midleware' => 'auth'], function(){
+    Route::get('/home',  [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 });
+
+Route::get('/', [App\Http\Controllers\MainController::class, 'index']) -> name('index');
+Route::get('/movies/{movie}', [App\Http\Controllers\MainController::class, 'show']) -> name('show');
